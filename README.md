@@ -1,5 +1,5 @@
- Shell-Make
-=============
+Shell-Make
+===========
 
 > [Aeon Digital](http://www.aeondigital.com.br)
 >
@@ -7,15 +7,14 @@
 
 &nbsp;
 
-Traz uma coleção de módulos de comandos ``Make`` contendo um ferramental de 
-auxilio para desenvolvedores.
+Traz uma coleção de módulos de comandos ``Make`` contendo um ferramental de auxilio para desenvolvedores.
 
 
 &nbsp;
 &nbsp;
 
 
-_______________________________________________________________________________
+________________________________________________________________________________________________________________________
 
 ## Instalação
 
@@ -46,12 +45,11 @@ Crie/edite o ``Makefile`` na raiz do seu projeto adicionando o seguinte:
 &nbsp;
 
 
-_______________________________________________________________________________
+________________________________________________________________________________________________________________________
 
 ## Atualização
 
-De tempos em tempos este projeto pode ser atualizado. Para que sua versão
-corresponda ao mais recente use:
+De tempos em tempos este projeto pode ser atualizado. Para que sua versão corresponda ao mais recente use:
 
 ```shell
   git submodule update --remote
@@ -62,12 +60,11 @@ corresponda ao mais recente use:
 &nbsp;
 
 
-_______________________________________________________________________________
+________________________________________________________________________________________________________________________
 
 ## Ativação em um projeto clonado
 
-Se um projeto que você clonou já possui este como um submódulo, para ativá-lo
-é preciso rodar os comandos abaixo:
+Se um projeto que você clonou já possui este como um submódulo, para ativá-lo é preciso rodar os comandos abaixo:
 
 ```shell
   git submodule init
@@ -75,12 +72,11 @@ Se um projeto que você clonou já possui este como um submódulo, para ativá-l
 ```
 
 
-
 &nbsp;
 &nbsp;
 
 
-_______________________________________________________________________________
+________________________________________________________________________________________________________________________
 
 ## Licença
 
