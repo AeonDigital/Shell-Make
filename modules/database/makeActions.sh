@@ -216,30 +216,35 @@ dataBaseCheckNetwork() {
 #
 # Verifica o acesso ao banco de dados da aplicação.
 #
-# @param string $1
-#       Controla o retorno da função para quando a verificação for
-#       bem sucedida.
-#       Use "" ou "0" para retornar apenas "1" quando a verificação for Ok.
-#       Use "1" para retornar uma mensagem amigável para o usuário.
+# @param bool $1
+#       Controla o retorno da função.
+#       Se omitido ou "0", retornará um valor booleano.
+#       Se "1" retornará uma mensagem amigável.
 #
 # @return
-#       Retornará '1' caso a conexão tenha sido estabelecida com sucesso
-#       ou apresentará a falhaencontrada.
-#       Se $1 for "1" e a conexão for bem sucedida, retornará uma mensagem
-#       amigável;
+#       Se "$1" = "0" | ""
+#       Retornará "1" caso a verificação tenha sido bem sucedida e "0"
+#       em caso contrário.
+#       Se "$1" = "1"
+#       Retornará uma mensagem amigável.
 dataBaseCheckCredentials() {
   local tmpConn=$(dataBaseExecuteCommand "")
   local tmpResult=$(dataBaseExecuteInstruction "${tmpConn}" ";")
   declare -a arrMessage=()
 
-  if [ "${tmpResult}" != "" ]; then
-    arrMessage+=("${tmpResult}")
-    mse_inter_showAlert "f" "Credenciais não aceitas" "arrMessage"
-  else
-    if [ "$1" != "1" ]; then
-      echo "1"
+
+  if [ "$1" == "1" ]; then
+    if [ "${tmpResult}" != "" ]; then
+      arrMessage+=("${tmpResult}")
+      mse_inter_showAlert "f" "Credenciais não aceitas" "arrMessage"
     else
       mse_inter_showAlert "s" "Credenciais aceitas" "arrMessage"
+    fi
+  else
+    if [ "${tmpResult}" != "" ]; then
+      echo "0"
+    else
+      echo "1"
     fi
   fi
 }
@@ -318,8 +323,9 @@ dataBaseStart() {
   local tmpMsgTitle=""
 
   tmpResult=$(dataBaseCheckCredentials "0")
-  if [ "${tmpResult}" != "1" ]; then
-    echo "${tmpResult}"
+  if [ "${tmpResult}" == "0" ]; then
+    declare -a arrMessage+=("${tmpResult}")
+    mse_inter_showAlert "f" "Credenciais não aceitas" "arrMessage"
   else
     local DATABASE_NAME=$(mse_config_showVariableValue "${MK_WEB_SERVER_ENV_FILE}" "" "DATABASE_NAME")
 

@@ -10,6 +10,7 @@ MSE_GLOBAL_THEME_NAME="mse_inter_theme_default"
 #
 # Variáveis para comandos Makefile
 MK_ROOT_PATH="${PWD}"
+MK_HAS_DATABASE_CONTAINER="1"
 MK_WEB_SERVER_DATABASE_BOOTSTRAP_FILE="/etc/database/bootstrap.sql"
 
 MK_WEB_SERVER_ENV_FILE="${MK_ROOT_PATH}/container-config/apache-php-8.2/etc/.env"

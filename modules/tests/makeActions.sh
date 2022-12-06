@@ -30,15 +30,29 @@
 # > make test file="path/to/tgtFile.php"
 # > make test file="path/to/tgtFile.php" method="tgtMethodName"
 performUnitTests() {
-  if [ -z ${file+x} ]; then
-    docker exec -it ${CONTAINER_WEBSERVER_NAME} vendor/bin/phpunit --configuration "tests/phpunit.xml" --colors=always --verbose --debug
-  else
-    if [ -z ${method+x} ]; then
-      docker exec -it ${CONTAINER_WEBSERVER_NAME} vendor/bin/phpunit "tests/src/${file}" --colors=always --verbose --debug
+  local tmpCanExecute="1"
+
+  if [ "${MK_HAS_DATABASE_CONTAINER}" == "1" ]; then
+    . "${PWD}/Shell-Make/modules/docker/makeActions.sh"
+    tmpCanExecute=$(checkIfContainerExists "${CONTAINER_DBSERVER_NAME}")
+
+    if [ "${tmpCanExecute}" == "1" ]; then
+      . "${PWD}/Shell-Make/modules/database/makeActions.sh"
+      tmpCanExecute=$(dataBaseCheckCredentials)
+    fi
+  fi
+
+  if [ "${tmpCanExecute}" == "1" ]; then
+    if [ -z ${file+x} ]; then
+      docker exec -it ${CONTAINER_WEBSERVER_NAME} vendor/bin/phpunit --configuration "tests/phpunit.xml" --colors=always --verbose --debug
     else
-      docker exec -it ${CONTAINER_WEBSERVER_NAME} vendor/bin/phpunit --filter "::${method}\$" "tests/src/${file}" --colors=always --verbose --debug
-    fi;
-  fi;
+      if [ -z ${method+x} ]; then
+        docker exec -it ${CONTAINER_WEBSERVER_NAME} vendor/bin/phpunit "tests/src/${file}" --colors=always --verbose --debug
+      else
+        docker exec -it ${CONTAINER_WEBSERVER_NAME} vendor/bin/phpunit --filter "::${method}\$" "tests/src/${file}" --colors=always --verbose --debug
+      fi
+    fi
+  fi
 }
 
 

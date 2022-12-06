@@ -63,6 +63,47 @@ getContainersIP() {
 
 
 
+#
+# Verifica se o container alvo existe
+#
+# @param string $1
+#       Nome do container que será verificado.
+#
+# @param bool $2
+#       Controla o retorno da função.
+#       Se omitido ou "0", retornará um valor booleano.
+#       Se "1" retornará uma mensagem amigável.
+#
+# @return
+#       Se "$2" = "0" | ""
+#       Retornará "1" caso a verificação tenha sido bem sucedida e "0"
+#       em caso contrário.
+#       Se "$2" = "1"
+#       Retornará uma mensagem amigável.
+checkIfContainerExists() {
+  local tmpResult=""
+  if [ "${1}" != "" ]; then
+    tmpResult=$(docker ps -q -f name="${1}")
+  fi
+
+
+  if [ "$2" == "1" ]; then
+    if [ "${tmpResult}" == "" ]; then
+      mse_inter_showAlert "f" "O container não existe ou não está ativo."
+    else
+      mse_inter_showAlert "s" "O container existe e está ativo."
+    fi
+  else
+    if [ "${tmpResult}" == "" ]; then
+      echo "0"
+    else
+      echo "1"
+    fi
+  fi
+}
+
+
+
 
 #
 # Mostra um help inicial para o usuário
