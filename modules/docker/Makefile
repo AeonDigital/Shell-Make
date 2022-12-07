@@ -42,26 +42,6 @@ down:
 
 
 #
-# Instala as dependências do projeto
-# usando o 'php composer'
-php-composer-install:
-	make/makeActions.sh makeExecuteBefore "$@"
-	docker exec -it ${CONTAINER_WEBSERVER_NAME} composer install --prefer-dist
-	make/makeActions.sh makeExecuteAfter "$@"
-
-#
-# Atualiza as dependências do projeto
-# usando o 'php composer'
-php-composer-update:
-	make/makeActions.sh makeExecuteBefore "$@"
-	docker exec -it ${CONTAINER_WEBSERVER_NAME} composer update --prefer-dist
-	make/makeActions.sh makeExecuteAfter "$@"
-
-
-
-
-
-#
 # Entra no bash do container principal do projeto.
 #
 # Informe um parametro 'cont' para indicar em qual container deseja entrar.

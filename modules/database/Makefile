@@ -35,6 +35,8 @@ db-check-credentials:
 
 
 
+
+
 #
 # Mostra as configurações de 'character-set' atualmente definida.
 db-show-characterset:
@@ -54,14 +56,15 @@ db-show-collation:
 
 
 #
-# Remove totalmente o banco de dados da aplicação.
+# Remove totalmente o banco de dados da aplicação e inicia um novo
+# totalmente zerado.
 db-clean:
 	make/makeActions.sh makeExecuteBefore "$@"
 	Shell-Make/modules/database/makeActions.sh dataBaseStart "0"
 	make/makeActions.sh makeExecuteAfter "$@"
 
 #
-# Inicia um novo banco de dados para a aplicação.
+# Popula o banco de dados para a aplicação com os dados iniciais.
 db-start:
 	make/makeActions.sh makeExecuteBefore "$@"
 	Shell-Make/modules/database/makeActions.sh dataBaseStart "1"

@@ -24,8 +24,10 @@
 # Recebe o nome do comando que está sendo executado.
 #
 makeExecuteBefore() {
-  if [ "$1" == "up" ] && [ ! -f "./composer.lock" ]; then
-    echo "{}" > "./composer.lock"
+  if [ "${ENVIRONMENT}" == "UTEST" ]; then
+    if [ "$1" == "up" ] && [ ! -f "./composer.lock" ]; then
+      echo "{}" > "./composer.lock"
+    fi
   fi
 
 
@@ -85,6 +87,11 @@ makeExecuteBefore() {
 makeExecuteAfter() {
   local doNothing=""
 }
+
+
+
+
+
 
 
 

@@ -17,62 +17,9 @@ git-config-local:
 #
 # Mostra log resumido do git
 # Use o parametro 'len' para indicar a quantidade de itens a serem mostrados.
-log:
+git-log:
 	make/makeActions.sh makeExecuteBefore "$@"
 	Shell-Make/modules/git/makeActions.sh gitShowLog "${MAKECMDGOALS}"
-	make/makeActions.sh makeExecuteAfter "$@"
-
-
-
-
-
-#
-# Mostra qual a tag atual do projeto.
-tag:
-	make/makeActions.sh makeExecuteBefore "$@"
-	git describe --abbrev=0 --tags
-	make/makeActions.sh makeExecuteAfter "$@"
-
-#
-# Redefine a tag atualmente vigente para o commit mais recente
-tag-remark:
-	make/makeActions.sh makeExecuteBefore "$@"
-	Shell-Make/modules/git/makeActions.sh gitTagManagement "remark"
-	make/makeActions.sh makeExecuteAfter "$@"
-
-#
-# Atualiza o 'patch' da tag atualmente definida
-# para a branch principal 'main'.
-tag-update:
-	make/makeActions.sh makeExecuteBefore "$@"
-	Shell-Make/modules/git/makeActions.sh gitTagManagement "version" "patch"
-	make/makeActions.sh makeExecuteAfter "$@"
-
-#
-# Atualiza o 'minor version' da tag atualmente definida
-# para a branch principal 'main'.
-tag-update-minor:
-	make/makeActions.sh makeExecuteBefore "$@"
-	Shell-Make/modules/git/makeActions.sh gitTagManagement "version" "minor"
-	make/makeActions.sh makeExecuteAfter "$@"
-
-#
-# Atualiza o 'major version' da tag atualmente definida
-# para a branch principal 'main'.
-tag-update-major:
-	make/makeActions.sh makeExecuteBefore "$@"
-	Shell-Make/modules/git/makeActions.sh gitTagManagement "version" "major"
-	make/makeActions.sh makeExecuteAfter "$@"
-
-#
-# Atualiza a 'stability' da tag atualmente definida
-# para a branch principal 'main'.
-#
-# Use o parametro 'stability' para indicar qual será a nova 'stability'.
-# use apenas um dos seguintes valores: 'alpha'; 'beta'; 'cr'; 'r'
-tag-stability:
-	make/makeActions.sh makeExecuteBefore "$@"
-	Shell-Make/modules/git/makeActions.sh gitTagManagement "stability" "${stability}"
 	make/makeActions.sh makeExecuteAfter "$@"
 
 
@@ -123,7 +70,7 @@ tag-stability:
 # Use o parametro 'name' para definir o nome da branch.
 # todos os caracteres serão convertidos para minúsculas e qualquer espaço será convertido em '-'.
 #
-task-start:
+git-task-start:
 	make/makeActions.sh makeExecuteBefore "$@"
 	Shell-Make/modules/git/makeActions.sh gitTaskStart "${type}" "${datetime}"
 	make/makeActions.sh makeExecuteAfter "$@"
@@ -197,14 +144,14 @@ task-start:
 # data e hora do momento em que o comando foi executado usando o formato 'YYYY-MM-DD HH:mm'
 # ("+%Y-%m-%d %H:%M").
 # Para todos os outros tipos de prefixos é necessário usar algum valor para a mensagem do commit.
-task-commit:
+git-task-commit:
 	make/makeActions.sh makeExecuteBefore "$@"
 	Shell-Make/modules/git/makeActions.sh gitCommit "${prefix}" "${message}"
 	make/makeActions.sh makeExecuteAfter "$@"
 
 #
 # Efetua o 'push' dos commits locais para o repositório remoto.
-task-push:
+git-task-push:
 	make/makeActions.sh makeExecuteBefore "$@"
 	Shell-Make/modules/git/makeActions.sh gitPush
 	make/makeActions.sh makeExecuteAfter "$@"
@@ -225,7 +172,60 @@ task-push:
 # estiver especificada com o valor '1'. De outra forma, a entrega remota será
 # feita mas o merge ficará a cargo de uma outra ação como um Pull Request, ou
 # uma revisão de outro desenvolvedor.
-task-finish:
+git-task-finish:
 	make/makeActions.sh makeExecuteBefore "$@"
 	Shell-Make/modules/git/makeActions.sh gitTaskFinish
+	make/makeActions.sh makeExecuteAfter "$@"
+
+
+
+
+
+#
+# Mostra qual a tag atual do projeto.
+git-tag:
+	make/makeActions.sh makeExecuteBefore "$@"
+	git describe --abbrev=0 --tags
+	make/makeActions.sh makeExecuteAfter "$@"
+
+#
+# Redefine a tag atualmente vigente para o commit mais recente
+git-tag-remark:
+	make/makeActions.sh makeExecuteBefore "$@"
+	Shell-Make/modules/git/makeActions.sh gitTagManagement "remark"
+	make/makeActions.sh makeExecuteAfter "$@"
+
+#
+# Atualiza o 'patch' da tag atualmente definida
+# para a branch principal 'main'.
+git-tag-update:
+	make/makeActions.sh makeExecuteBefore "$@"
+	Shell-Make/modules/git/makeActions.sh gitTagManagement "version" "patch"
+	make/makeActions.sh makeExecuteAfter "$@"
+
+#
+# Atualiza o 'minor version' da tag atualmente definida
+# para a branch principal 'main'.
+git-tag-update-minor:
+	make/makeActions.sh makeExecuteBefore "$@"
+	Shell-Make/modules/git/makeActions.sh gitTagManagement "version" "minor"
+	make/makeActions.sh makeExecuteAfter "$@"
+
+#
+# Atualiza o 'major version' da tag atualmente definida
+# para a branch principal 'main'.
+git-tag-update-major:
+	make/makeActions.sh makeExecuteBefore "$@"
+	Shell-Make/modules/git/makeActions.sh gitTagManagement "version" "major"
+	make/makeActions.sh makeExecuteAfter "$@"
+
+#
+# Atualiza a 'stability' da tag atualmente definida
+# para a branch principal 'main'.
+#
+# Use o parametro 'stability' para indicar qual será a nova 'stability'.
+# use apenas um dos seguintes valores: 'alpha'; 'beta'; 'cr'; 'r'
+git-tag-stability:
+	make/makeActions.sh makeExecuteBefore "$@"
+	Shell-Make/modules/git/makeActions.sh gitTagManagement "stability" "${stability}"
 	make/makeActions.sh makeExecuteAfter "$@"
