@@ -44,8 +44,8 @@ down:
 #
 # Entra no bash do container principal do projeto.
 #
-# Informe um parametro 'cont' para indicar em qual container deseja entrar.
-#   Valores aceitos são: web|db
+# Informe um parametro 'cont' para indicar em qual container deseja se conectar.
+#   Opções: 'web' | 'db' | hash-ou-nome-do-container
 #   Se nenhum valor for informado, entrará no 'web'
 bash:
 	make/makeActions.sh makeExecuteBefore "$@"
@@ -54,7 +54,22 @@ bash:
 
 #
 # Retorna o IP da rede usado pelos containers
+#
+# Informe um parametro 'cont' para indicar qual container deseja conferir o IP.
+#   Opções: 'web' | 'db' | hash-ou-nome-do-container
+#   Se nenhum valor for informado, mostrará o do 'web'
 get-ip:
 	make/makeActions.sh makeExecuteBefore "$@"
-	Shell-Make/modules/docker/makeActions.sh getContainersIP
+	Shell-Make/modules/docker/makeActions.sh getContainersIP "${MAKECMDGOALS}"
+	make/makeActions.sh makeExecuteAfter "$@"
+
+#
+# Executa um 'tail' no log do container alvo.
+#
+# Informe um parametro 'cont' para indicar em qual container deseja se conectar.
+#   Opções: 'web' | 'db' | hash-ou-nome-do-container
+#   Se nenhum valor for informado, entrará no 'web'
+log-tail:
+	make/makeActions.sh makeExecuteBefore "$@"
+	Shell-Make/modules/docker/makeActions.sh logTail "${MAKECMDGOALS}"
 	make/makeActions.sh makeExecuteAfter "$@"
