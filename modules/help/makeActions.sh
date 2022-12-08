@@ -29,6 +29,7 @@ makeHelp() {
   local tmpPathToModules=$(find ${PWD}/Shell-Make/modules/* -type d)
   local tmpModulePath=""
   local tmpModuleName=""
+  local tmpShowHelp="1"
 
   while read tmpModulePath; do
     tmpModuleName="$(basename -- ${tmpModulePath})"
@@ -36,6 +37,7 @@ makeHelp() {
     if [ "${tmpModuleName}" != "help" ]; then
       if [ "${tmpModule}" == "" ] || [ "${tmpModule}" == "${tmpModuleName}" ]; then
         makeHelpModuleInfo "${tmpModuleName}"
+        tmpShowHelp="0"
       fi
 
       arrModuleNames+=("${tmpModuleName}")
@@ -44,7 +46,9 @@ makeHelp() {
   done <<< ${tmpPathToModules}
 
 
-  makeHelpModuleInfo "help"
+  if [ "${tmpShowHelp}" == "1" ]; then
+    makeHelpModuleInfo "help"
+  fi
 
   mse_inter_showAlert "a" "${tmpMsgTitle}" "arrMessage"
 }
