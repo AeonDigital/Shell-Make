@@ -58,14 +58,3 @@ get-ip:
 	make/makeActions.sh makeExecuteBefore "$@"
 	Shell-Make/modules/docker/makeActions.sh getContainersIP
 	make/makeActions.sh makeExecuteAfter "$@"
-
-
-
-
-
-#
-# Mostra um help
-help:
-	make/makeActions.sh makeExecuteBefore "$@"
-	Shell-Make/modules/docker/makeActions.sh makeHelp
-	make/makeActions.sh makeExecuteAfter "$@"
