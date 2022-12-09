@@ -93,3 +93,8 @@ tmpMacroInfo+=("Atualiza a 'stability' da tag atualmente definida para a branch 
 tmpMacroInfo+=("@param")
 tmpMacroInfo+=("stability=string")
 tmpMacroInfo+=("Opções: 'alpha' | 'beta' | 'cr' | 'r'")
+
+
+tmpMacroInfo+=("@macro")
+tmpMacroInfo+=("git-convert-eol-to-lf")
+tmpMacroInfo+=("Converte o EOL de todos os arquivos do repositório para LF.")

@@ -727,6 +727,46 @@ gitTaskFinish() {
 
 
 
+#
+# Converte o EOL de todos os arquivos do repositório para LF.
+gitConvertEOLToLF() {
+  local tmpHasChanges=$(git status --porcelain 2> /dev/null)
+
+  local useTitleMsg=""
+  local tmpCheckValue=""
+  unset useMsgLines
+  declare -a useMsgLines=()
+
+
+  if [ "${tmpHasChanges}" != "" ]; then
+    useTitleMsg="Há alterações não comitadas! Commite ou descarte-as para prosseguir."
+    mse_inter_showAlert "e" "${useTitleMsg}"
+  else
+
+    useTitleMsg="ATENÇÃO::As seguintes ações serão executadas:"
+
+    useMsgLines+=("${mseNONE}- Todos os arquivos do repositório terão seu EOL convertido para LF (padrão UNIX).")
+    useMsgLines+=("  git config core.autocrlf false")
+    useMsgLines+=("  git rm --cached -r .")
+    useMsgLines+=("  git reset --hard")
+
+    mse_inter_showAlert "w" "${useTitleMsg}" "useMsgLines"
+
+    useTitleMsg="Você confirma estas ações?"
+    mse_inter_showPrompt "" "or" "${useTitleMsg}" "bool"
+
+    if [ "${MSE_GLOBAL_PROMPT_RESULT}" == "1" ]; then
+      git config core.autocrlf false
+      git rm --cached -r .
+      git reset --hard
+    fi
+  fi
+}
+
+
+
+
+
 
 
 

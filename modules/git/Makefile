@@ -229,3 +229,14 @@ git-tag-stability:
 	make/makeActions.sh makeExecuteBefore "$@"
 	Shell-Make/modules/git/makeActions.sh gitTagManagement "stability" "${stability}"
 	make/makeActions.sh makeExecuteAfter "$@"
+
+
+
+
+
+#
+# Converte o EOL de todos os arquivos do repositório para LF
+git-convert-eol-to-lf:
+	make/makeActions.sh makeExecuteBefore "$@"
+	Shell-Make/modules/repo/makeActions.sh convertEOLToLF
+	make/makeActions.sh makeExecuteAfter "$@"
