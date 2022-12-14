@@ -55,7 +55,7 @@ tmpMacroInfo+=("Se nenhum valor for informado, usará o valor 'web'")
 
 
 tmpMacroInfo+=("@macro")
-tmpMacroInfo+=("tail")
+tmpMacroInfo+=("log-tail")
 tmpMacroInfo+=("Executa um 'tail' no log do container alvo.")
 tmpMacroInfo+=("@param")
 tmpMacroInfo+=("cont=string")
