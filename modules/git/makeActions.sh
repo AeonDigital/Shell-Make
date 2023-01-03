@@ -9,6 +9,7 @@
 
 #
 # Carrega as ferramentas de uso geral
+. "${PWD}/.env"
 . "${PWD}/make/makeEnvironment.sh"
 . "${PWD}/Shell-Make/assets/standalone.sh"
 . "${PWD}/Shell-Make/assets/makeTools.sh"
@@ -22,7 +23,7 @@
 # Use o parametro 'len' para indicar a quantidade de itens a serem mostrados.
 gitShowLog() {
   if [ -z ${len+x} ]; then
-    len="${MK_GIT_LOG_LENGTH}"
+    len="${MK_GIT_DEFAULT_LOG_LENGTH}"
   fi
 
   git log -${len} --pretty='format:%h | %ad | %s' --date=format:'%d %B | %H:%M'
@@ -697,7 +698,7 @@ gitTaskFinish() {
       useMsgLines+=("  git pull origin ${MK_GIT_DEFAULT_BRANCH}")
       if [ "${MK_GIT_TASK_FINISH_MERGE}" == "1" ]; then
         useMsgLines+=("${mseNONE}- Promove o merge da tarefa concluída com a branch principal.")
-        useMsgLines+=("  git merge main ${tmpAtualBranch} –no-ff")
+        useMsgLines+=("  git merge main ${tmpAtualBranch} -no-ff")
       fi
       useMsgLines+=("${mseNONE}- Envia todas alterações para a branch principal no servidor remoto.")
       useMsgLines+=("  git push origin ${MK_GIT_DEFAULT_BRANCH}")

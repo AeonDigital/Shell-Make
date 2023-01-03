@@ -9,6 +9,7 @@
 
 #
 # Carrega as ferramentas de uso geral
+. "${PWD}/.env"
 . "${PWD}/make/makeEnvironment.sh"
 . "${PWD}/Shell-Make/assets/standalone.sh"
 . "${PWD}/Shell-Make/assets/makeTools.sh"
@@ -33,12 +34,12 @@
 dataBaseExecuteCommand() {
   #
   # Resgata os dados de acesso ao banco de dados alvo.
-  local DATABASE_TYPE=$(mse_config_showVariableValue "${MK_WEB_SERVER_ENV_FILE}" "" "DATABASE_TYPE")
-  local DATABASE_HOST=$(mse_config_showVariableValue "${MK_WEB_SERVER_ENV_FILE}" "" "DATABASE_HOST")
-  local DATABASE_PORT=$(mse_config_showVariableValue "${MK_WEB_SERVER_ENV_FILE}" "" "DATABASE_PORT")
-  local DATABASE_NAME=$(mse_config_showVariableValue "${MK_WEB_SERVER_ENV_FILE}" "" "DATABASE_NAME")
-  local DATABASE_USER=$(mse_config_showVariableValue "${MK_WEB_SERVER_ENV_FILE}" "" "DATABASE_USER")
-  local DATABASE_PASS=$(mse_config_showVariableValue "${MK_WEB_SERVER_ENV_FILE}" "" "DATABASE_PASS")
+  local DATABASE_TYPE=$(mse_config_showVariableValue "${MK_ENV_FILE}" "" "DATABASE_TYPE")
+  local DATABASE_HOST=$(mse_config_showVariableValue "${MK_ENV_FILE}" "" "DATABASE_HOST")
+  local DATABASE_PORT=$(mse_config_showVariableValue "${MK_ENV_FILE}" "" "DATABASE_PORT")
+  local DATABASE_NAME=$(mse_config_showVariableValue "${MK_ENV_FILE}" "" "DATABASE_NAME")
+  local DATABASE_USER=$(mse_config_showVariableValue "${MK_ENV_FILE}" "" "DATABASE_USER")
+  local DATABASE_PASS=$(mse_config_showVariableValue "${MK_ENV_FILE}" "" "DATABASE_PASS")
 
   #
   # Utiliza o container de servidor web pois ele possui um client MySql
@@ -81,12 +82,12 @@ dataBaseExecuteCommand() {
 dataBaseDumpCommand() {
   #
   # Resgata os dados de acesso ao banco de dados alvo.
-  local DATABASE_TYPE=$(mse_config_showVariableValue "${MK_WEB_SERVER_ENV_FILE}" "" "DATABASE_TYPE")
-  local DATABASE_HOST=$(mse_config_showVariableValue "${MK_WEB_SERVER_ENV_FILE}" "" "DATABASE_HOST")
-  local DATABASE_PORT=$(mse_config_showVariableValue "${MK_WEB_SERVER_ENV_FILE}" "" "DATABASE_PORT")
-  local DATABASE_NAME=$(mse_config_showVariableValue "${MK_WEB_SERVER_ENV_FILE}" "" "DATABASE_NAME")
-  local DATABASE_USER=$(mse_config_showVariableValue "${MK_WEB_SERVER_ENV_FILE}" "" "DATABASE_USER")
-  local DATABASE_PASS=$(mse_config_showVariableValue "${MK_WEB_SERVER_ENV_FILE}" "" "DATABASE_PASS")
+  local DATABASE_TYPE=$(mse_config_showVariableValue "${MK_ENV_FILE}" "" "DATABASE_TYPE")
+  local DATABASE_HOST=$(mse_config_showVariableValue "${MK_ENV_FILE}" "" "DATABASE_HOST")
+  local DATABASE_PORT=$(mse_config_showVariableValue "${MK_ENV_FILE}" "" "DATABASE_PORT")
+  local DATABASE_NAME=$(mse_config_showVariableValue "${MK_ENV_FILE}" "" "DATABASE_NAME")
+  local DATABASE_USER=$(mse_config_showVariableValue "${MK_ENV_FILE}" "" "DATABASE_USER")
+  local DATABASE_PASS=$(mse_config_showVariableValue "${MK_ENV_FILE}" "" "DATABASE_PASS")
 
   local tmpDocker=$(echo "docker exec -it ${CONTAINER_WEBSERVER_NAME}");
   local tmpConnection=""
@@ -153,7 +154,7 @@ dataBaseExecuteInstruction() {
 #
 # Verifica se há comunicação com o servidor do banco de dados.
 dataBaseCheckPing() {
-  local DATABASE_HOST=$(mse_config_showVariableValue "${MK_WEB_SERVER_ENV_FILE}" "" "DATABASE_HOST")
+  local DATABASE_HOST=$(mse_config_showVariableValue "${MK_ENV_FILE}" "" "DATABASE_HOST")
   local pingResult=$(checkServerWithPing "${DATABASE_HOST}" "1" "1")
 
 
@@ -186,7 +187,7 @@ dataBaseCheckNetwork() {
   mse_inter_showAlert "a" "Iniciando teste [ ping x 10 ]" "arrMessage"
   mse_inter_setCursorPosition "top" "1"
 
-  local DATABASE_HOST=$(mse_config_showVariableValue "${MK_WEB_SERVER_ENV_FILE}" "" "DATABASE_HOST")
+  local DATABASE_HOST=$(mse_config_showVariableValue "${MK_ENV_FILE}" "" "DATABASE_HOST")
   local pingResult=$(checkServerWithPing "${DATABASE_HOST}" "10" "1")
 
   if [ "${pingResult}" == "" ]; then
@@ -327,7 +328,7 @@ dataBaseStart() {
     declare -a arrMessage+=("${tmpResult}")
     mse_inter_showAlert "f" "Credenciais não aceitas" "arrMessage"
   else
-    local DATABASE_NAME=$(mse_config_showVariableValue "${MK_WEB_SERVER_ENV_FILE}" "" "DATABASE_NAME")
+    local DATABASE_NAME=$(mse_config_showVariableValue "${MK_ENV_FILE}" "" "DATABASE_NAME")
 
     #
     # Identifica se o banco de dados alvo existe
@@ -377,7 +378,7 @@ dataBaseStart() {
 
         mse_inter_showAlert "s" "${tmpMsgTitle}" "arrMessage"
         if [ "$1" == "1" ]; then
-          if [ ! -f "${MK_LOCAL_BOOTSTRAP_FILE}" ]; then
+          if [ ! -f "${MK_WEBSERVER_EXTERNAL_DATABASE_BOOTSTRAP_FILE}" ]; then
             tmpMsgTitle="O arquivo \"bootstrap.sql\" não foi encontrado."
             declare -a arrMessage=()
 
@@ -388,7 +389,7 @@ dataBaseStart() {
             arrMessage+=("Esta ação pode levar alguns minutos.")
 
             mse_inter_showAlert "a" "${tmpMsgTitle}" "arrMessage"
-            if [ ! -s "${MK_LOCAL_BOOTSTRAP_FILE}" ]; then
+            if [ ! -s "${MK_WEBSERVER_EXTERNAL_DATABASE_BOOTSTRAP_FILE}" ]; then
               tmpMsgTitle="O arquivo de instruções \"bootstrap\" está vazio."
               declare -a arrMessage=()
               arrMessage+=("Execução abortada.")
@@ -397,7 +398,7 @@ dataBaseStart() {
             else
               local tmpDump=$(dataBaseDumpCommand "import" "1")
 
-              tmpSQL="SOURCE ${MK_WEB_SERVER_DATABASE_BOOTSTRAP_FILE};"
+              tmpSQL="SOURCE ${MK_WEBSERVER_INTERNAL_DATABASE_BOOTSTRAP_FILE};"
               tmpResult=$(dataBaseExecuteInstruction "${tmpDump}" "${tmpSQL}")
               if [ "${tmpResult}" == "" ]; then
                 tmpMsgTitle="\"bootstrap\" instalado com sucesso."
@@ -442,9 +443,9 @@ dataBaseExport() {
   local tmpMonth=$(date +"%m")
 
   local tmpContainerDir="/etc/database/backup/${tmpYear}/${tmpMonth}/"
-  local tmpHostDir="${MK_LOCAL_CONTAINER_ROOT_DIR}${tmpContainerDir}"
+  local tmpHostDir="${CONTAINER_WEBSERVER_CONFIG_DIR}${tmpContainerDir}"
 
-  local DATABASE_NAME=$(mse_config_showVariableValue "${MK_WEB_SERVER_ENV_FILE}" "" "DATABASE_NAME")
+  local DATABASE_NAME=$(mse_config_showVariableValue "${MK_ENV_FILE}" "" "DATABASE_NAME")
 
 
   tmpMsgTitle="ATENÇÃO"
@@ -563,7 +564,7 @@ dataBaseExecutePatch() {
     mse_inter_showAlert "f" "${tmpMsgTitle}" "arrMessage"
   else
     local tmpContainerPatch="/etc/database/patch/${file}";
-    local tmpHostPatch="${MK_LOCAL_CONTAINER_ROOT_DIR}${tmpContainerPatch}";
+    local tmpHostPatch="${CONTAINER_WEBSERVER_CONFIG_DIR}${tmpContainerPatch}";
 
     if [ ! -f "${tmpHostPatch}" ]; then
       tmpMsgTitle="ERRO"
